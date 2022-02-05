@@ -1,14 +1,11 @@
 using System.Collections;
 using UnityEngine;
 
-public enum WeatherState { Sun, Rain, Snow }
+public enum WeatherState { Rain, Snow, Sun }
 
 [RequireComponent(typeof(AudioSource))]
 public class WeatherSystem : MonoBehaviour
-{
-    public float minLightIntensity = 0f;
-    public float maxLightIntensity = 1f;
-
+{ 
     private int switchWeather = 0;
 
     public AudioSource audioSource;
@@ -30,11 +27,7 @@ public class WeatherSystem : MonoBehaviour
         LoadWeatherSystem();
         StartCoroutine(StartDynamicWeather());
     }
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.R))
-            SelectWeather();
-    }
+    
     void LoadWeatherSystem()
     {
         for (int i = 0; i < weatherData.Length; i++)
@@ -46,12 +39,12 @@ public class WeatherSystem : MonoBehaviour
     {
         while (true)
         {
-            if (weatherState == WeatherState.Sun)
-                ActivateWeather("Sun");
+            if (weatherState == WeatherState.Rain)
+                ActivateWeather("Rain");
             else if (weatherState == WeatherState.Snow)
                 ActivateWeather("Snow");
-            else if (weatherState == WeatherState.Rain)
-                ActivateWeather("Rain ");
+            else if (weatherState == WeatherState.Sun)
+                ActivateWeather("Sun");
             yield return null;
         }
     }
@@ -75,34 +68,35 @@ public class WeatherSystem : MonoBehaviour
             }
         }
     }
-    void SelectWeather()
+    public void SwitchWeather()
     {
         if (switchWeather < 2)
             switchWeather++;
         else switchWeather = 0;
         ResetWeather();
+
         if (switchWeather == 0)
-            weatherState = WeatherState.Sun;
-        else if (switchWeather == 1)
             weatherState = WeatherState.Rain;
-        else if (switchWeather == 2)
+        else if (switchWeather == 1)
             weatherState = WeatherState.Snow;
+        else if (switchWeather == 2)
+            weatherState = WeatherState.Sun;
         
     }
-
     void ChangeWeatherSettings(float lightIntensity, AudioClip audioClip)
     {
         Light tmpLight = GetComponent<Light>();
-        if(tmpLight.intensity > maxLightIntensity) { tmpLight.intensity -= Time.deltaTime * lightIntensity; }
-        if (tmpLight.intensity < maxLightIntensity) { tmpLight.intensity += Time.deltaTime * lightIntensity; }
 
-        if(weatherData[switchWeather].useAudio == true)
+        if (tmpLight.intensity > lightIntensity) { tmpLight.intensity -= Time.deltaTime * lightIntensity; }
+        if (tmpLight.intensity < lightIntensity) { tmpLight.intensity += Time.deltaTime * lightIntensity; }
+
+        if (weatherData[switchWeather].useAudio == true)
         {
             AudioSource tmpAudio = GetComponent<AudioSource>();
-
+            
             if(tmpAudio.volume > 0 && tmpAudio.clip != audioClip)
             {
-                tmpAudio.volume -= Time.deltaTime * weatherData[switchWeather].audioInFade;
+                tmpAudio.volume -= Time.deltaTime * .2f;
             }
 
             if(tmpAudio.volume == 0)
@@ -110,12 +104,13 @@ public class WeatherSystem : MonoBehaviour
                 tmpAudio.Stop();
                 tmpAudio.clip = audioClip;
                 tmpAudio.loop = true;
+                tmpAudio.volume = weatherData[switchWeather].audioVolume;
                 tmpAudio.Play();
             }
 
             if(tmpAudio.volume < 1 && tmpAudio.clip != audioClip)
             {
-                tmpAudio.volume -= Time.deltaTime * weatherData[switchWeather].audioInFade;
+                tmpAudio.volume -= Time.deltaTime * .01f;
             }
         }
     }
