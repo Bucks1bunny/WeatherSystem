@@ -62,7 +62,7 @@ public class WeatherSystem : MonoBehaviour
                         weatherData[i].fogColor = RenderSettings.fogColor;
                         RenderSettings.fogColor = Color.Lerp(weatherData[i].currentFogColor, weatherData[i].fogColor, weatherData[i].fogChangeSpeed * Time.deltaTime);
 
-                        ChangeWeatherSettings(weatherData[i].lightIntensity, weatherData[i].weatherAudio);
+                        ChangeWeatherSettings(weatherData[i].lightIntensity, weatherData[i].weatherAudio, weatherData[i].skyBox);
                     }
                 }
             }
@@ -83,13 +83,14 @@ public class WeatherSystem : MonoBehaviour
             weatherState = WeatherState.Sun;
         
     }
-    void ChangeWeatherSettings(float lightIntensity, AudioClip audioClip)
+    void ChangeWeatherSettings(float lightIntensity, AudioClip audioClip, Material skyBox)
     {
+        // LightIntensity change
         Light tmpLight = GetComponent<Light>();
 
         if (tmpLight.intensity > lightIntensity) { tmpLight.intensity -= Time.deltaTime * lightIntensity; }
         if (tmpLight.intensity < lightIntensity) { tmpLight.intensity += Time.deltaTime * lightIntensity; }
-
+        // Volume change
         if (weatherData[switchWeather].useAudio == true)
         {
             AudioSource tmpAudio = GetComponent<AudioSource>();
@@ -113,6 +114,10 @@ public class WeatherSystem : MonoBehaviour
                 tmpAudio.volume -= Time.deltaTime * .01f;
             }
         }
+        // Skybox change
+        if (RenderSettings.skybox != skyBox)
+            RenderSettings.skybox = skyBox;
+
     }
     void ResetWeather()
     {

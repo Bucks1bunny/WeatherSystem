@@ -2,54 +2,38 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-    public CharacterController controller;
+    private Vector3 movementInput;
+    private Rigidbody rb;
     public float startPlayerSpeed = 5f;
-    public float jumpHeight = 2f;
     public static float playerSpeed;
-    private Vector3 playerVelocity;
 
-    //GroundCheck
-    private bool groundedPlayer;
-    private float groundCollisionFix = 0.4f;
-    public float gravityValue = -9.81f;
 
     public static bool canMove;
     private Animator anim;
     private void Start()
     {
         anim = GetComponent<Animator>();
+        rb = GetComponent<Rigidbody>();
         playerSpeed = startPlayerSpeed;
         canMove = true;
     }
-
-    void Update()
+    private void Update()
     {
-        groundedPlayer = controller.isGrounded;
-        if (groundedPlayer && playerVelocity.y < 0)
-        {
-            playerVelocity.y = -groundCollisionFix;
-        }
+        movementInput = new Vector3(Input.GetAxis("Horizontal"), 0.0f, Input.GetAxis("Vertical"));
+    }
+    void FixedUpdate()
+    {
         if (canMove)
         {
-            float vectorX = Input.GetAxis("Horizontal");
-            float vectorZ = Input.GetAxis("Vertical");
+            Vector3 move = transform.TransformDirection(movementInput) * playerSpeed;
 
-            Vector3 move = transform.right * vectorX + transform.forward * vectorZ;
+            rb.velocity = new Vector3(move.x, rb.velocity.y, move.z);
 
-            controller.Move(move * playerSpeed * Time.deltaTime);
-
-            if (controller.velocity.magnitude > 0)
+            if (rb.velocity.magnitude > 0)
                 anim.SetBool("IsMoving", true);
             else
                 anim.SetBool("IsMoving", false);
             
-
-            if (Input.GetKeyDown(KeyCode.Space) && groundedPlayer)
-            {
-                playerVelocity.y += Mathf.Sqrt(jumpHeight * -3.0f * gravityValue - groundCollisionFix);
-            }
-            playerVelocity.y += gravityValue * Time.deltaTime;
-            controller.Move(playerVelocity * Time.deltaTime);
         }
 
     }

@@ -8,7 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: NAT_CobbleRocks1
-  m_Shader: {fileID: 4800000, guid: 1a302063efeed7d49a2f2100a375a14f, type: 3}
+  m_Shader: {fileID: 4800000, guid: 2d633bb56c032804aab1483755c666ab, type: 3}
   m_ShaderKeywords: _NORMALMAP
   m_LightmapFlags: 5
   m_EnableInstancingVariants: 0
@@ -21,6 +21,10 @@ Material:
     m_TexEnvs:
     - _AO:
         m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Bump:
+        m_Texture: {fileID: 2800000, guid: 2313836302b6344428dcc22ab37c0d45, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BumpMap:
@@ -93,6 +97,7 @@ Material:
     - _Parallax: 0.02
     - _Power: 0.8
     - _Shift: -0.24
+    - _SnowLevel: -0.35
     - _SrcBlend: 1
     - _UVSec: 0
     - _VMask: 0
@@ -103,4 +108,6 @@ Material:
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
+    - _SnowColor: {r: 1, g: 1, b: 1, a: 1}
+    - _SnowDirection: {r: 0, g: 1, b: 0, a: 1}
   m_BuildTextureStacks: []

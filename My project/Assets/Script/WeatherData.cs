@@ -7,6 +7,7 @@ public struct WeatherData
 {
     public string name;
     public ParticleSystem particleSystem;
+    public Material skyBox;
 
     [HideInInspector]
     public ParticleSystem.EmissionModule emission;
