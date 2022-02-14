@@ -6,7 +6,7 @@ public enum WeatherState { Rain, Snow, Sun }
 [RequireComponent(typeof(AudioSource))]
 public class WeatherSystem : MonoBehaviour
 { 
-    private int switchWeather = 0;
+    //private int switchWeather = 0;
 
     public AudioSource audioSource;
     public Light sunLight;
@@ -59,20 +59,16 @@ public class WeatherSystem : MonoBehaviour
                     if(weatherData[i].name == weather)
                     {
                         weatherData[i].emission.enabled = true;
-                        weatherData[i].fogColor = RenderSettings.fogColor;
-                        RenderSettings.fogColor = Color.Lerp(weatherData[i].currentFogColor, weatherData[i].fogColor, weatherData[i].fogChangeSpeed * Time.deltaTime);
 
-                        ChangeWeatherSettings(weatherData[i].lightIntensity, weatherData[i].weatherAudio, weatherData[i].skyBox);
+                        RenderSettings.fogColor = weatherData[i].fogColor;
+                        ChangeWeatherSettings(weatherData[i].lightIntensity, weatherData[i].weatherAudio, weatherData[i].audioVolume, weatherData[i].skyBox, weatherData[i].fogDensity);
                     }
                 }
             }
         }
     }
-    public void SwitchWeather()
+    public void SwitchWeather(int switchWeather)
     {
-        if (switchWeather < 2)
-            switchWeather++;
-        else switchWeather = 0;
         ResetWeather();
 
         if (switchWeather == 0)
@@ -83,7 +79,7 @@ public class WeatherSystem : MonoBehaviour
             weatherState = WeatherState.Sun;
         
     }
-    void ChangeWeatherSettings(float lightIntensity, AudioClip audioClip, Material skyBox)
+    void ChangeWeatherSettings(float lightIntensity, AudioClip audioClip, float audioVolume, Material skyBox, float fogDensity)
     {
         // LightIntensity change
         Light tmpLight = GetComponent<Light>();
@@ -91,33 +87,34 @@ public class WeatherSystem : MonoBehaviour
         if (tmpLight.intensity > lightIntensity) { tmpLight.intensity -= Time.deltaTime * lightIntensity; }
         if (tmpLight.intensity < lightIntensity) { tmpLight.intensity += Time.deltaTime * lightIntensity; }
         // Volume change
-        if (weatherData[switchWeather].useAudio == true)
+        AudioSource tmpAudio = GetComponent<AudioSource>();
+
+        if (tmpAudio.volume > 0 && tmpAudio.clip != audioClip)
         {
-            AudioSource tmpAudio = GetComponent<AudioSource>();
-            
-            if(tmpAudio.volume > 0 && tmpAudio.clip != audioClip)
-            {
-                tmpAudio.volume -= Time.deltaTime * .2f;
-            }
-
-            if(tmpAudio.volume == 0)
-            {
-                tmpAudio.Stop();
-                tmpAudio.clip = audioClip;
-                tmpAudio.loop = true;
-                tmpAudio.volume = weatherData[switchWeather].audioVolume;
-                tmpAudio.Play();
-            }
-
-            if(tmpAudio.volume < 1 && tmpAudio.clip != audioClip)
-            {
-                tmpAudio.volume -= Time.deltaTime * .01f;
-            }
+            tmpAudio.volume -= Time.deltaTime * .2f;
         }
+
+        if (tmpAudio.volume == 0)
+        {
+            tmpAudio.Stop();
+            tmpAudio.clip = audioClip;
+            tmpAudio.loop = true;
+            tmpAudio.volume = audioVolume;
+            tmpAudio.Play();
+        }
+
+        if (tmpAudio.volume < 1 && tmpAudio.clip != audioClip)
+        {
+            tmpAudio.volume -= Time.deltaTime * .01f;
+        }
+
         // Skybox change
         if (RenderSettings.skybox != skyBox)
             RenderSettings.skybox = skyBox;
 
+        // Fog density change
+        if (RenderSettings.fogDensity > fogDensity) { RenderSettings.fogDensity -= Time.deltaTime * fogDensity; }
+        if (RenderSettings.fogDensity < fogDensity) { RenderSettings.fogDensity += Time.deltaTime * fogDensity; }
     }
     void ResetWeather()
     {

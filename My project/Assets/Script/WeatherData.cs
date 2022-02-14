@@ -11,15 +11,13 @@ public struct WeatherData
 
     [HideInInspector]
     public ParticleSystem.EmissionModule emission;
-
+    [Header("Audio")]
     public bool useAudio;
     public AudioClip weatherAudio;
     public float audioVolume;
-
-
+    [Header("Light")]
     public float lightIntensity;
-    public float fogChangeSpeed;
-
+    [Header("Fog")]
+    public float fogDensity;
     public Color fogColor;
-    public Color currentFogColor;
 }
