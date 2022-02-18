@@ -3,7 +3,7 @@ Shader "Unlit/SnowShader"
 	Properties{
 		_SnowColor("Snow color", Color) = (1, 1, 1, 1)
 		_MainTex("MainTexture", 2D) = "white" {}
-		_Bump("BumpTex", 2D) = "bump" {}
+		_NormalTex("NormalTex", 2D) = "bump" {}
 		_SnowDirection("Snow direction", Vector) = (0, 1, 0)
 		_SnowLevel("Amount of Snow", Range(1, -1)) = 0
 	}
@@ -23,7 +23,7 @@ Shader "Unlit/SnowShader"
 
 			struct Input {
 				float2 uv_MainTex;
-				float2 uv_Bump;
+				float2 uv_NormalTex;
 				float3 worldNormal;
 				INTERNAL_DATA
 			};
@@ -31,7 +31,7 @@ Shader "Unlit/SnowShader"
 			void surf(Input IN, inout SurfaceOutput o)
 			{
 				half4 tex = tex2D(_MainTex, IN.uv_MainTex);
-				o.Normal = UnpackNormal(tex2D(_Bump, IN.uv_Bump));
+				o.Normal = UnpackNormal(tex2D(_Bump, IN.uv_NormalTex));
 				if (dot(WorldNormalVector(IN, o.Normal), _SnowDirection) >= _SnowLevel)
 				{
 					o.Albedo = _SnowColor.rgb;
