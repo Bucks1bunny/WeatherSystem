@@ -2,39 +2,47 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
+    [field: SerializeField]
+    public float StartSpeed
+    {
+        get;
+        private set;
+    }
+    public float PlayerSpeed
+    {
+        get;
+        set;
+    }
+
     private Vector3 movementInput;
     private Rigidbody rb;
-    public float startPlayerSpeed = 5f;
-    public static float playerSpeed;
-
-
-    public static bool canMove;
     private Animator anim;
+
     private void Start()
     {
         anim = GetComponent<Animator>();
         rb = GetComponent<Rigidbody>();
-        playerSpeed = startPlayerSpeed;
-        canMove = true;
+        PlayerSpeed = StartSpeed;
     }
     private void Update()
     {
         movementInput = new Vector3(Input.GetAxis("Horizontal"), 0.0f, Input.GetAxis("Vertical"));
+
     }
-    void FixedUpdate()
+
+    private void FixedUpdate()
     {
-        if (canMove)
+        Vector3 move = transform.TransformDirection(movementInput) * PlayerSpeed;
+
+        rb.velocity = new Vector3(move.x, rb.velocity.y, move.z);
+
+        if (rb.velocity.x > 0 || rb.velocity.z > 0)
         {
-            Vector3 move = transform.TransformDirection(movementInput) * playerSpeed;
-
-            rb.velocity = new Vector3(move.x, rb.velocity.y, move.z);
-
-            if (rb.velocity.magnitude > 0)
-                anim.SetBool("IsMoving", true);
-            else
-                anim.SetBool("IsMoving", false);
-            
+            anim.SetBool("IsMoving", true);
         }
-
+        else
+        {
+            anim.SetBool("IsMoving", false);
+        }
     }
 }

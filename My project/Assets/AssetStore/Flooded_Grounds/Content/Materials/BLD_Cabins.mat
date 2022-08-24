@@ -71,6 +71,10 @@ Material:
         m_Texture: {fileID: 2800000, guid: 57238606e02d3444dbe7546d1288aac0, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _NormalTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _Occlusion:
         m_Texture: {fileID: 2800000, guid: 1f7a9e560a2922c448ff0eeeec15354f, type: 3}
         m_Scale: {x: 1, y: 1}
@@ -118,7 +122,7 @@ Material:
     - _Shift: -1
     - _SmoothnessTextureChannel: 0
     - _SnowAmount: 0.783
-    - _SnowLevel: 0.56
+    - _SnowLevel: 0.34
     - _SpecularHighlights: 1
     - _SrcBlend: 1
     - _UVSec: 0

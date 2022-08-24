@@ -3,16 +3,16 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    // Health
-    [Header("Health system")]
-    public HealthBar healthBar;
-    public float maxHealth = 100;
     public static float currentHealth;
-
-    [Header("Status bar")]
     public Slider statusBar;
-    public Image fill;
-    
+
+    [SerializeField]
+    private float maxHealth = 100;
+    [SerializeField]
+    private HealthBar healthBar;
+    [SerializeField]
+    private Image fill;
+
     void Start()
     {
         currentHealth = maxHealth;
@@ -24,7 +24,9 @@ public class Player : MonoBehaviour
         healthBar.SetHealth(currentHealth);
 
         if (currentHealth <= 0)
-             Debug.Log("Dead");
+        {
+            Application.Quit();
+        }
     }
     public void ChangeFillColor(Color color)
     {

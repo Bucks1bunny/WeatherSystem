@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class InHouseManager : MonoBehaviour
 {
-    [SerializeField] public static bool isInside;
+    public static bool isInside;
+
     private void Awake()
     {
         isInside = false;

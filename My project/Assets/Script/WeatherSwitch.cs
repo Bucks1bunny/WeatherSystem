@@ -1,19 +1,23 @@
-using UnityEngine.Events;
+using System;
 using UnityEngine;
 
 public class WeatherSwitch : MonoBehaviour
 {
-    public UnityEvent switchWeather;
-    public Color color;
-    public Player player;
+    public event Action<int> BiomSwitched = delegate { };
+
+    [SerializeField]
+    private Color color;
+    [SerializeField]
+    private Player player;
+    [SerializeField]
+    private int Biom;
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.tag == "Player")
         {
-            switchWeather?.Invoke();
             player.ChangeFillColor(color);
+            BiomSwitched(Biom);
         }
-       
     }
 }

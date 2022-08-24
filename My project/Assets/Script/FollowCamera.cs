@@ -2,10 +2,12 @@ using UnityEngine;
 
 public class FollowCamera : MonoBehaviour
 {
-    public float sensitivityX;
-    public float sensitivityY;
-
-    public Transform player;
+    [SerializeField]
+    private float sensitivityX;
+    [SerializeField]
+    private float sensitivityY;
+    [SerializeField]
+    private Transform player;
     private Camera cam;
 
     private float rotationX;
